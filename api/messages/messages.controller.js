@@ -1,14 +1,34 @@
 var MessagesModel = require('./messages.model');
 var response = require('../../lib/response');
+const ObjectId = require('mongoose').Types.ObjectId;
 
-exports.create = async (req, res) => {
+exports.create = async (msg) => {
     try {
-        const newMessage = new MessagesModel(req.body);
+        msg.sentAt = new Date();
+        const newMessage = new MessagesModel(msg);
         const data = await newMessage.save();
-        return response.success(res, data);
+        return data;
     } catch(err) {
-        return response.error(res, err);
+        console.log("error in saving new message: ", err);
+        throw err;
     };
+}
+
+exports.getChatHistory = async (obj) => {
+    try {
+        const chatFromMeToFrnd = await MessagesModel.find({
+            from: ObjectId(obj.myId), 
+            to: ObjectId(obj.friendId)
+        });
+        const chatFromFrndToMe = await MessagesModel.find({
+            from: ObjectId(obj.friendId), 
+            to: ObjectId(obj.myId)
+        });
+        
+        return [...chatFromMeToFrnd, ...chatFromFrndToMe];
+    } catch(err) {
+        throw new Error("Error in fetching chat history form database");
+    }
 }
 
 exports.readAll = async (req, res) => {

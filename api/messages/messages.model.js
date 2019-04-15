@@ -1,24 +1,29 @@
 var mongoose = require('mongoose');
 
 var MessagesSchema = new mongoose.Schema({
-    message: {
+    msg: {
         type: String,
         required: true
     },
-    createdAt: {
-        type: Date
-    },
-    updatedAt: {
-        type: Date
+    sentAt: Date,
+    receivedAt: Date,
+    readAt: Date,
+    updatedAt: Date,
+    deletedAt: Date,
+    deleted: {
+        type: Boolean,
+        default: false
     },
     from: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     to: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     }
 });
 
-modules.export = mongoose.model('Message', MessagesSchema);
+module.exports = mongoose.model('Message', MessagesSchema);
