@@ -29,14 +29,18 @@ var UsersSchema = new mongoose.Schema({
     dp: String
 });
 
-// UsersSchema.pre('save', async function(next) {
-//     console.log("this: ", this);
-//     const regex = /^\d+$/g;
-//     if(regex.test(this.phoneNum)) {
-//         return next();
-//     }
-//     return next(new Error("Phone number should contain only numbers"));
-// });
+UsersSchema.pre('save', async function(next) {
+    if(!this.email) {
+        return next(new Error("email is a mandatory field"));
+    }
+    this.email = this.email.toLowerCase();
+    next();
+});
+// console.log("this: ", this);
+// const regex = /^\d+$/g;
+// if(regex.test(this.phoneNum)) {
+//     return next();
+// }
 // {
 //     type: String,
 //     required: true,
