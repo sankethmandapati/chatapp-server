@@ -26,7 +26,7 @@ exports.getUser = async (querry) => {
         if(querry.email) {
             querry.email = querry.email.toLowerCase();
         }
-        const user = await UsersModel.findOne(querry).select('-password').lean().exec();
+        const user = await UsersModel.findOne(querry).lean().exec();
         if(!user) {
             throw new Error("User details not found");
         }

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 var UsersSchema = new mongoose.Schema({
     name: {
@@ -30,10 +31,11 @@ var UsersSchema = new mongoose.Schema({
 });
 
 UsersSchema.pre('save', async function(next) {
-    if(!this.email) {
-        return next(new Error("email is a mandatory field"));
+    if(!this.email || !this.password) {
+        return next(new Error("email and password are mandatory fields"));
     }
     this.email = this.email.toLowerCase();
+    this.password = bcrypt.hashSync(this.password, 10);
     next();
 });
 // console.log("this: ", this);

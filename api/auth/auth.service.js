@@ -1,6 +1,7 @@
 const Users = require('../users/users.model');
 const usersController = require('../users/users.controller');
 var jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 function generateJwt(userDetails) {
     const obj = {
@@ -39,11 +40,8 @@ exports.authenticate = (token) => {
 
 exports.register = async (data) => {
     try {
-        console.log("data: ", data);
         const response = await usersController.create(data);
-        console.log("response: ", response);
         const authObj = generateJwt(response);
-        console.log("authObj: ", authObj);
         return authObj;
     } catch(err) {
         console.log("error in auth service: ", err);
@@ -53,10 +51,15 @@ exports.register = async (data) => {
 
 exports.login = async (data) => {
     try {
-        console.log("data in auth service: ", data);
-        const response = await usersController.getUser(data);
-        const authObj = generateJwt(response);
-        return authObj;
+        const response = await usersController.getUser({email: data.email});
+        if(bcrypt.compareSync(data.password, response.password)) {
+            // Passwords match
+            const authObj = generateJwt(response);
+            return authObj;
+        } else {
+            // Passwords don't match
+            throw new Error("Wrong password");
+        }
     } catch(err) {
         throw err;
     }
