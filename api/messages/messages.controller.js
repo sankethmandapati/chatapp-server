@@ -16,16 +16,22 @@ exports.create = async (msg) => {
 
 exports.getChatHistory = async (obj) => {
     try {
-        const chatFromMeToFrnd = await MessagesModel.find({
-            from: ObjectId(obj.myId), 
-            to: ObjectId(obj.friendId)
-        });
-        const chatFromFrndToMe = await MessagesModel.find({
-            from: ObjectId(obj.friendId), 
-            to: ObjectId(obj.myId)
-        });
-        
-        return [...chatFromMeToFrnd, ...chatFromFrndToMe];
+        const chatHistory = await MessagesModel.aggregate([{
+            $match: {
+                $or: [{
+                    from: ObjectId(obj.myId), 
+                    to: ObjectId(obj.friendId)
+                }, {
+                    from: ObjectId(obj.friendId), 
+                    to: ObjectId(obj.myId)
+                }]
+            }
+        }, {
+            $sort: {
+                sentAt: 1
+            }
+        }]).exec();
+        return chatHistory;
     } catch(err) {
         throw new Error("Error in fetching chat history form database");
     }
