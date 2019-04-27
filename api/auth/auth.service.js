@@ -9,7 +9,7 @@ function generateJwt(userDetails) {
         userName: userDetails.name,
         loginTime: new Date()
     };
-    var token = jwt.sign(obj, "C#@t@PP", {expiresIn: '7d'});
+    var token = jwt.sign(obj, "C#@t@PP");
     obj.accessToken = token;
     return obj;
 }
