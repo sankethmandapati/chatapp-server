@@ -27,6 +27,10 @@ var UsersSchema = new mongoose.Schema({
         type: String,
         enum: ['male', 'female']
     },
+    created_at: {
+        type: Date,
+        required: true
+    },
     dp: String
 });
 

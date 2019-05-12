@@ -3,6 +3,7 @@ var response = require('../../lib/response');
 
 exports.create = async (reqData) => {
     try {
+        reqData.created_at = new Date();
         const newUser = new UsersModel(reqData);
         const data = await newUser.save();
         return data;

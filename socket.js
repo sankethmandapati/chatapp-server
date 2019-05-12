@@ -1,8 +1,6 @@
 const usersController = require('./api/users/users.controller');
 const auth = require('./api/auth/auth.service');
 const messageController = require('./api/messages/messages.controller');
-// const ObjectId = require('mongoose').Types.ObjectId;
-// var jwt = require('jsonwebtoken');
 
 module.exports = (server) => {
     var io = require('socket.io')(server);
@@ -10,13 +8,8 @@ module.exports = (server) => {
         try {
             const userDetails = await auth.authenticate(socket.handshake.query.token);
             if(userDetails && (Object.keys(userDetails).length > 0)) {
-                if(io.sockets.adapter.rooms[userDetails._id]) {
-                    console.log("duplicate connection 1");
-                    next(new Error("Duplicate connection"));
-                } else {
-                    socket.userDetails = userDetails;
-                    next();
-                }
+                socket.userDetails = userDetails;
+                next();
             } else {
                 next(new Error("We are not able to recognise the user, Please logout and login again"));
             }
