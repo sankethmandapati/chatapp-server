@@ -79,7 +79,7 @@ exports.removeUser = async (id) => {
     }
 }
 
-exports.verifyMail = (_id) => {
+exports.verifyMail = async (_id) => {
     try {
         const user = await UsersModel.find({_id});
         if(!user)
