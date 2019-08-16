@@ -1,12 +1,26 @@
 var UsersModel = require('./users.model');
-var response = require('../../lib/response');
+var mailer = require('../../lib/mailer');
+// var response = require('../../lib/response');
+
+const sendMail = async (emailId, name, id) => {
+    try {
+        const subject = "Verify Your email address";
+        const text = `Hi ${name}, \n\n Please verify your email address by clicking on the below link`;
+        const html = `<a href="http://3.16.10.225:3005/verifyMail/${id}">Click here</a>`;
+        await mailer(emailId, subject, text, html);
+        return "Verification email sent";
+    } catch(err) {
+        throw new Error("Unable to send verification email");
+    }
+}
 
 exports.create = async (reqData) => {
     try {
         reqData.created_at = new Date();
         const newUser = new UsersModel(reqData);
         const data = await newUser.save();
-        return data;
+        await sendMail(data.email);
+        return {msg: "A verification mail has been sent to your email id, please check"};
     } catch(err) {
         console.log("error in user controller: ", err);
         throw err;
@@ -62,5 +76,17 @@ exports.removeUser = async (id) => {
         return {msg: "user removed successfully"};
     } catch(err) {
         throw err;
+    }
+}
+
+exports.verifyMail = (_id) => {
+    try {
+        const user = await UsersModel.find({_id});
+        if(!user)
+            throw new Error("User details not found, please try again after some time");
+        await UsersModel.findOneAndUpdate({_id}, {$set: {emailVerified: true}});
+        return "Email id verified successfully, goto http://3.16.10.225:8080/login to login to your account";
+    } catch(err) {
+        throw new Error("Internal server error");
     }
 }

@@ -31,7 +31,11 @@ var UsersSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    dp: String
+    dp: String,
+    emailVerified: {
+        type: Boolean,
+        default: false
+    }
 });
 
 UsersSchema.pre('save', async function(next) {
