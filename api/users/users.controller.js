@@ -5,8 +5,27 @@ var mailer = require('../../lib/mailer');
 const sendMail = async (emailId, name, id) => {
     try {
         const subject = "Verify Your email address";
-        const text = `Hi ${name}, \n\n Please verify your email address by clicking on the below link`;
-        const html = `<a href="http://3.16.10.225:3005/verifyMail/${id}">Click here</a>`;
+        const text = `Hi ${name}, Please verify your email address by clicking on the below link`;
+        const html = `<div>
+            <p>
+                Hi ${name},
+            <p>
+            <br/>
+            <br/>
+            <p>
+                Please verify your email address by clicking on the below link
+            </p>
+            <p>
+                <a href="http://3.16.10.225:3005/verifyMail/${id}">Click here</a>
+                <span>
+                    to verify your email
+                </span>
+            <p>
+            <br/>
+            <br/>
+            <b>Best Regards</b>
+            <b>Team Chatapp</b>
+        </div>`;
         await mailer(emailId, subject, text, html);
         return "Verification email sent";
     } catch(err) {
@@ -19,7 +38,7 @@ exports.create = async (reqData) => {
         reqData.created_at = new Date();
         const newUser = new UsersModel(reqData);
         const data = await newUser.save();
-        await sendMail(data.email);
+        await sendMail(data.email, data.name, data._id);
         return {msg: "A verification mail has been sent to your email id, please check"};
     } catch(err) {
         console.log("error in user controller: ", err);
