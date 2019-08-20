@@ -100,12 +100,16 @@ exports.removeUser = async (id) => {
 
 exports.verifyMail = async (_id) => {
     try {
-        const user = await UsersModel.find({_id});
+        console.log("_id: ", _id);
+        const user = await UsersModel.findOne({_id});
+        console.log("user: ", user);
         if(!user)
             throw new Error("User details not found, please try again after some time");
-        await UsersModel.findOneAndUpdate({_id}, {$set: {emailVerified: true}});
+        const update = await UsersModel.findOneAndUpdate({_id}, {$set: {emailVerified: true}});
+        console.log("update: ", update);
         return "Email id verified successfully, goto http://3.16.10.225:8080/login to login to your account";
     } catch(err) {
+        console.log("Error in verifying email");
         throw new Error("Internal server error");
     }
 }

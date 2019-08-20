@@ -47,7 +47,7 @@ router.get('/verifyMail/:id', async (req, res) => {
         const msg = await controller.verifyMail(req.params.id);
         return response.success({msg});
     } catch(err) {
-        return response.error.error(res, err.message);
+        return response.error(res, err.message);
     }
 });
 
