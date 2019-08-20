@@ -45,8 +45,9 @@ router.delete('/:id', async (req, res) => {
 router.get('/verifyMail/:id', async (req, res) => {
     try {
         const msg = await controller.verifyMail(req.params.id);
-        return response.success({msg});
+        return response.success(res, {msg});
     } catch(err) {
+        console.log("Err: ", err);
         return response.error(res, err.message);
     }
 });
