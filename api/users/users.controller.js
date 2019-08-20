@@ -16,7 +16,7 @@ const sendMail = async (emailId, name, id) => {
                 Please verify your email address by clicking on the below link
             </p>
             <p>
-                <a href="http://3.16.10.225:3005/verifyMail/${id}">Click here</a>
+                <a href="http://3.16.10.225:3005/users/verifyMail/${id}">Click here</a>
                 <span>
                     to verify your email
                 </span>
