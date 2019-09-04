@@ -14,6 +14,7 @@ module.exports = (server) => {
                 next(new Error("We are not able to recognise the user, Please logout and login again"));
             }
         } catch(err) {
+            console.log("Error in authenticating...: ", err);
             next(err);
         }
     }).on('connection', (socket) => {

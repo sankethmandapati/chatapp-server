@@ -25,7 +25,7 @@ exports.authenticate = (token) => {
                 console.log("decoded: ", decoded);
                 return reject("Failed to authenticate user");
             }
-            Users.findById(decoded.userId).select('name email').lean()
+            Users.findById(decoded.userId).select('name email emailVerified').lean()
             .then((user) => {
                 if(!user)
                     return reject("Unable to identify the user");
