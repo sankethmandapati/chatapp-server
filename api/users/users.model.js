@@ -21,7 +21,7 @@ var UsersSchema = new mongoose.Schema({
     age: Number,
     isOnline: {
         type: Boolean,
-        default: true
+        default: false
     },
     gender: {
         type: String,
